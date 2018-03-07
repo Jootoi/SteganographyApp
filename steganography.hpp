@@ -59,7 +59,9 @@ public:
 	//Decodes data hidden by randomEmbedd function. Random generator seed is first argument, second argument is length of message to decode and 3rd and 4th arguments are same as RandomEmbedds 4th and 5th.
 	unsigned char* decode(unsigned int, unsigned int, int = 3, int = 1);
 	 
-
+	//Analyses if something have been embedded to the image using LSB steganography. Analysis method is based on J. Fridrich and M. Long, “Steganalysis of LSB Encoding in Color Images,” Proceedings of the IEEE
+	//International Conference on Multimedia and Expo(ICME), vol. 3, pp. 1279 – 1282, New York, NY, USA, July – August 2000. Some reasonable initial values are used for test data size and threshold (20% and 1,1).
+	//Uses a million pixels (or all the pixels in the image) for analysis. For comparison, full HD image has about 2 million pixels.
 	bool analyze();
 
 	~Bitmap() {
@@ -88,6 +90,7 @@ unsigned int* KNU_Shuffle(unsigned int key, unsigned int length);
 //Assigns non-repeating pseudo-random numbers to array. Returns array with size = "size" and numbers from [0,length[. Becomes less efficient as "size" increases and as "size" aproaches "length".
 unsigned int* RandomArray(unsigned int key, unsigned int length, unsigned int size);
 
+//Counts  unique colors and "close color" pairs. First element in pair is number of unique colors and second element is number of "close color" pairs.
 std::pair<unsigned int, unsigned int>* countColors(Steg::Bitmap* bm);
 
 

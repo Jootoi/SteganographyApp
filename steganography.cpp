@@ -78,7 +78,7 @@ int Steg::Bitmap::save(std::string name) {
 }
 
 
-//Randomly embedds bits to least significant bits of the image. Unsigned int sets limits to maximum image size (about 26kx26k pixels) and to maximum payload size (above 500GB).
+//Randomly embedds bits to least significant bits of the image. 
 bool Steg::Bitmap::randomEmbedd(unsigned int key, unsigned char * data, unsigned int length, int number_of_color_planes, int lsb) {
 	unsigned int max_size = std::abs(this->DIB->pixels_h)*this->DIB->pixels_w*number_of_color_planes*lsb;
 	unsigned char mask = 255 << lsb;
@@ -131,7 +131,6 @@ Steg::Bitmap* Steg::readBitmap(std::string name) {
 			bm->bmHeader = h;
 			bm->DIB = dib;
 			if (bm->DIB->bits_per_pixel == 24 && bm->DIB->compression == 0) {
-				//read pixel data
 				int data_size = bm->bmHeader->file_size - bm->bmHeader->data_offset;
 
 				char *image_buffer = new char[data_size];
@@ -159,7 +158,7 @@ Steg::Bitmap* Steg::readBitmap(std::string name) {
 	return bm;
 }
 
-//Knuth-Fisher-Yates shuffle to get random array of non-repeating numbers
+//Selects between two methods of producing array of non-repeating pseudo-random numbers.
 unsigned int* Steg::Shuffle(unsigned int key, unsigned int length, unsigned int size) {
 	if (length / size < 50) {
 		return Steg::KNU_Shuffle(key, length);
@@ -169,6 +168,7 @@ unsigned int* Steg::Shuffle(unsigned int key, unsigned int length, unsigned int 
 	}
 }
 
+//Decodes the data from the image
 unsigned char* Steg::Bitmap::decode(unsigned int key, unsigned int length,int number_of_color_planes, int lsb) {
 	unsigned int max_size = std::abs(this->DIB->pixels_h)*this->DIB->pixels_w*number_of_color_planes*lsb;
 	unsigned char* data_array = new unsigned char[length];
@@ -192,6 +192,7 @@ unsigned char* Steg::Bitmap::decode(unsigned int key, unsigned int length,int nu
 	return data_array;
 }
 
+//Knuth-Fisher-Yates shuffle to get random array of non-repeating numbers
 unsigned int* Steg::KNU_Shuffle(unsigned int key, unsigned int length) {
 	std::mersenne_twister_engine<std::uint_fast32_t, 32, 624, 397, 31,
 		0x9908b0df, 11,
@@ -213,7 +214,7 @@ unsigned int* Steg::KNU_Shuffle(unsigned int key, unsigned int length) {
 	return randomArray;
 }
 
-//This ended up beign even less efficient than I tought.
+//This ended up beign even less efficient than I tought. (Replace hash function maybe?)
 unsigned int* Steg::RandomArray(unsigned int key, unsigned int length, unsigned int size) {
 	std::mersenne_twister_engine<std::uint_fast32_t, 32, 624, 397, 31,
 		0x9908b0df, 11,
@@ -235,6 +236,7 @@ unsigned int* Steg::RandomArray(unsigned int key, unsigned int length, unsigned 
 	return rand;
 }
 
+//Analyses image for steganography
 bool Steg::Bitmap::analyze() {
 	std::pair<unsigned int, unsigned int>* firstMeasure = Steg::countColors(this);
 	std::srand(std::time(0));
@@ -255,7 +257,7 @@ bool Steg::Bitmap::analyze() {
 }
 
 
-
+//counts Unique colors and "Close color" pairs
 std::pair<unsigned int, unsigned int>* Steg::countColors(Steg::Bitmap* bm) {
 	std::set<unsigned char*, Steg::cmp> s;
 	unsigned int pixelCount = bm->DIB->pixels_w*std::abs(bm->DIB->pixels_h);
@@ -330,6 +332,7 @@ std::pair<unsigned int, unsigned int>* Steg::countColors(Steg::Bitmap* bm) {
 	return p;
 }
 
+//Comparison function for pixel data, orders pixels first by red then green and finally by blue value. Smallest value first.
 bool Steg::cmp::operator()(unsigned char* a, unsigned char* b) {
 	if (a[0] < b[0]) {
 		return true;
