@@ -11,6 +11,7 @@ NY, USA, July – August 2000.
 Launch the .exe and follow the orders.
 
 Few notes though:
+
 Only supported cover image format for now is 24 bits per pixel bitmap with Windows style bitmap header. This is the kind of bitmap that you get 
 when you save your image in Microsoft paint using 24-bit bitmap option.
 
@@ -21,6 +22,11 @@ Key used in encoding and decoding needs to be positive and smaller than 32-bit u
 and written to image header as well as shown to user at end of encoding. When decoding and key = 0 is given the key will be read from the header.
 
 Do not forget to give filename extension when giving filenames.
+
+## Where do I get the .exe?
+Try looking from [releases page](https://github.com/Jootoi/SteganographyApp/releases/tag/v0.1).
+## Portability
+Program uses pragma pack, pragma once, reinterpret-cast and expect certain size types so portability is questionable at best. Tested on Windows 10, built using Visual studio 2017.
 
 ## License
  Copyright © 2000 Joonas Toimela <Toimela.Joonas.J@student.uta.fi>
